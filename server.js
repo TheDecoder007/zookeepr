@@ -53,6 +53,14 @@ function filterByQuery(query, animalsArray) {
     return filteredResults;
   }
 
+//function to find an animal by id, used in the other GET route
+//takes in the id and array of animals, checks if that id exists,
+//and returns a single animal object
+function findById(id, animalsArray) {
+  const result = animalsArray.filter(animal => animal.id === id)[0];
+  return result;
+}
+
 //to send json, change .send to .json
 app.get('/api/animals', (req, res) => {
    let results = animals;
@@ -60,6 +68,17 @@ app.get('/api/animals', (req, res) => {
        results = filterByQuery(req.query, results);
    }
    res.json(results);
+});
+
+//using req.params using id to get just one animal
+//param route must come after other GET route
+app.get('/api/animals/:id', (req, res) => {
+  const result = findById(req.params.id, animals);
+    if (result) {
+    res.json(result);
+    } else {
+      res.send(404);
+    }
 });
 
 //sets up server on a port (3001)
