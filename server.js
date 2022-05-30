@@ -108,6 +108,7 @@ function validateAnimal(animal) {
 //(get() requires two arguments) first a string that describes the route
 //the client will fetch from. 2nd is callback function that will execute
 //when route is accesed with a GET request.
+
 app.get('/api/animals', (req, res) => {
    let results = animals;
    if (req.query) {
@@ -115,28 +116,10 @@ app.get('/api/animals', (req, res) => {
    }
    res.json(results);
 });
-//POST route for client to send data to the api (app.post)
-app.post('/api/animals', (req, res) => {
-
-  //set id based on what the next index of the array will be
-    req.body.id = animals.length.toString();
-
-  // if any data in req.body is incorrect, send 400 error back
-  if (!validateAnimal(req.body)) {
-    res.status(400).send('The animal is not properly formatted.');
-  } else {
-
-  //add animal to json file and animals array in this function
-  const animal = createNewAnimal(req.body, animals);
-
-  // req.body is where our incoming content will be
-   console.log(req.body);
-   res.json(animal);
-  }
-});
 
 //GET route using req.params using id to get just one animal
 //param route must come after other GET route
+
 app.get('/api/animals/:id', (req, res) => {
   const result = findById(req.params.id, animals);
     if (result) {
@@ -145,7 +128,9 @@ app.get('/api/animals/:id', (req, res) => {
       res.send(404);
     }
 });
+
 //POST route for client to send data to the api (app.post)
+
 app.post('/api/animals', (req, res) => {
 
   //set id based on what the next index of the array will be
