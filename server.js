@@ -1,4 +1,5 @@
 const express = require('express');
+const req = require('express/lib/request');
 const fs = require('fs');
 const path = require('path');
 const { animals } = require('./data/animals.json');
@@ -9,6 +10,9 @@ const app = express();
 app.use(express.urlencoded({ extended: true}));
 //parse incoming JSON data (middleware function)
 app.use(express.json());
+//built in Express.js middleware that instructs server to make certain files readily available
+//and not require seperate routes for each one (js and css for the html)
+app.use(express.static('public'));
 
 //route that front-end can request data from. 
 //(get() requires two arguments) first a string that describes the route
@@ -148,6 +152,26 @@ app.post('/api/animals', (req, res) => {
    console.log(req.body);
    res.json(animal);
     }
+});
+
+//GET index.html to be served from our express.js server
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/index.html'));
+});
+
+//GET animals.html to be served from our express.js server
+app.get('/animals', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/animals.html'));
+});
+
+//Get zookeepers.html to be served up from our express.js server
+app.get('/zookeepers', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/zookeepers.html'));
+});
+
+//wildcard route for client request that doesnt exist. Should always come last
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/index.html'));
 });
 
 //sets up server on a port (3001)
